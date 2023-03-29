@@ -29,11 +29,12 @@ export default {
     return {
       crimes: null,
       categories: [null],
-      newArrLabels: [null],
+      newArr: [null],
       locations,
-      theData: [12, 42, 53, 23, 53, 12, 43, 53, 23, 53, 36, 80, 36, 80],
+      theData: [null],
       labels: [null],
-      selectedLocation: 'Bristol'
+      selectedLocation: 'Bristol',
+      categoryObject: {}
     };
   },
   methods: {
@@ -46,31 +47,43 @@ export default {
 
     try {
         const response = await fetch(
-          `https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}&date=2022-12`,
+          `https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}&date=2023-01`,
           {
             "Content-Type": "text/plain",
           }
         );
        
         const data = await response.json();
+        console.log('data to start', data)
         const allCategories = data.map((item) => item.category);
+        
+        //looop through all data, if category exists increment that category count +1, if not, add to category to object and count is 1.
 
-        console.log("allCat", allCategories);
+        for (let item in data){
+          this.categoryObject.hasOwnProperty(data[item].category) 
+          ? this.categoryObject[data[item].category]++ 
+          : this.categoryObject[data[item].category] = 1
+        }
 
-        this.labels = allCategories.filter(function (item, index) {
-          return allCategories.indexOf(item) === index;
-        });
+        console.log('after loop:', this.categoryObject)
+        
+        const newLabels = Object.keys(this.categoryObject)
+        this.labels = newLabels
 
-        console.log("getlabels", this.labels);
-
+        console.log("getlabels in array", this.labels);
         
 
-        this.crimes = data;
+        // Needs to be an array of values
+        console.log('data', Object.values(this.categoryObject))
+        const newData = Object.values(this.categoryObject)
+        this.theData = newData
+
+        console.log("data for graph", this.theData)
+      
       } catch (e) {
         console.error(e);
       }
       }
-      //otherwise, fetch data and assign to variable.
       
     },
     getLocation(event){
