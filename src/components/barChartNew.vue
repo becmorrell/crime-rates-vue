@@ -1,8 +1,10 @@
 <template>
+<div>
     <Bar
         :data="chartData"
         :options="chartOptions"
     />
+    </div>
 </template>
 
 <script>
@@ -12,34 +14,35 @@ import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, Li
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
-    name: 'barChart',
+    extends: Bar,
     components: { Bar },
     props: {
-        dataSet: {
+        dataset: {
             type: Array,
             required: false
         },
-        chartLabels: {
+        labels: {
             type: Array,
             required: true
     }
 },
+    
     data(){
         return {
             chartData: {
-                labels: this.chartLabels,
+                labels: this.labels,
                 datasets: [
                     {
                         borderColor: '#f6b09e',
                         backgroundColor: 'rgb(246, 176, 157)',
                         label: 'crimes',
-                        data: this.dataSet,
+                        data: this.dataset,
                     },
                 ],
             },
             chartOptions: {
-                reposonsive: true,
-                maintianAspectRatio: false,
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: { display: true },
                     title: { display: true, text: 'Crimes 🥷🏻 in your area' },
@@ -47,7 +50,8 @@ export default {
             },
     }
     }
-
+   
+    
 }
 </script>
 

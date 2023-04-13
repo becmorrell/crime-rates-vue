@@ -1,7 +1,8 @@
 <template>
   <div>
+
     <h1>Crime Rates in {{selectedLocation}}</h1>
-    <BarChartNew :dataSet="theData" :chartLabels="labels" />
+    <BarChartNew v-if="theData" :data="theData" :labels="labels" />
 
     <select name="location" @change="getLocation($event, this.locations)" v-model="selectedLocation">
       <option v-for="(coordinates, location) in locations" :key="location" :value="location">
@@ -9,12 +10,6 @@
       </option>
     </select>
 
-    <!-- <Bar :data="data" :options="options" :labels="labels" /> -->
-
-    <!-- <div v-for="item in crimes" :key="item">
-      {{item.category}} - {{item.location.street.name}} -->
-
-    <!-- </div> -->
   </div>
 </template>
 
@@ -28,22 +23,19 @@ export default {
   data() {
     return {
       crimes: null,
-      categories: [null],
-      newArr: [null],
+      categories: null,
+      newArr: null,
       locations,
-      theData: [null],
-      labels: [null],
+      theData: [],
+      labels: [],
       selectedLocation: 'Bristol',
       categoryObject: {}
     };
   },
   methods: {
     async fetchData(selectedLocation) {
-      if (locations.hasOwnProperty(selectedLocation)){
       const lat = this.locations[selectedLocation].lat
-      console.log('lat', lat)
       const lng = this.locations[selectedLocation].lng
-      console.log('long', lng)
 
     try {
         const response = await fetch(
@@ -52,55 +44,32 @@ export default {
             "Content-Type": "text/plain",
           }
         );
-       
         const data = await response.json();
-        console.log('data to start', data)
-        const allCategories = data.map((item) => item.category);
-        
-        //looop through all data, if category exists increment that category count +1, if not, add to category to object and count is 1.
 
         for (let item in data){
           this.categoryObject.hasOwnProperty(data[item].category) 
           ? this.categoryObject[data[item].category]++ 
           : this.categoryObject[data[item].category] = 1
         }
-
-        console.log('after loop:', this.categoryObject)
-        
-        const newLabels = Object.keys(this.categoryObject)
-        this.labels = newLabels
-
-        console.log("getlabels in array", this.labels);
-        
-
-        // Needs to be an array of values
-        console.log('data', Object.values(this.categoryObject))
-        const newData = Object.values(this.categoryObject)
-        this.theData = newData
-
-        console.log("data for graph", this.theData)
-      
+        this.labels.push(...Object.keys(this.categoryObject))
+        this.theData = Object.values(this.categoryObject)
       } catch (e) {
         console.error(e);
       }
-      }
-      
     },
     getLocation(event){
       const selectedLocation = event.target.value
-      console.log('updated location = ', selectedLocation)
+
+      this.labels = [];
+      this.fetchData(event.target.value)
+
       return { selectedLocation }
     }
   },
-  created() {
-    this.fetchData();
+  mounted() {
+    this.fetchData(this.selectedLocation);
   },
-  watch: {
-    selectedLocation(a){
-      console.log('new change')
-      this.fetchData(a)
-    }
-  }
+  
 };
 </script>
 
