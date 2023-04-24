@@ -3,6 +3,10 @@ export const locations = {
         lat:	'57.149651',
         lng:	'-2.099075'
       },
+      Abersoch: {
+        lat: '52.8245',
+        lng: '-4.5054'
+      },
       Ayr: {lat:	'55.458565', lng:	'-4.629179'},
       Basildon: {lat:	'51.572376', lng:	'0.470009'},
       Bath: {lat:	'51.380001', lng:	'-2.360000'},

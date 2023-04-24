@@ -8,9 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fawmi/vue-google-maps": "0.9.67",
     "chart.js": "^4.2.1",
     "vue": "^3.2.45",
-    "vue-chartjs": "^5.2.0"
+    "vue-chartjs": "^5.2.0",
+    "vue3-google-map": "^0.15.0",
+    "vue3-openlayers": "^0.1.75"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^1.0.1",
